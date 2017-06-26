@@ -168,3 +168,26 @@ class G2PModel(Archive):
 
     def validate(self, corpus):
         return True  # FIXME add actual validation
+
+
+class LanguageModel(Archive):
+    def add_meta_file(self, generator):
+        with open(os.path.join(self.dirname, 'meta.yaml'), 'w') as f:
+            meta = {
+                'order': generator.order,
+                'architecture': '',
+                'version': __version__}
+            yaml.dump(meta, f)
+
+    @property
+    def meta(self):
+        if not self._meta:
+            meta_path = os.path.join(self.dirname, 'meta.yaml')
+            if not os.path.exists(meta_path):
+                self._meta = {'version': '1.0.0',
+                              'architecture': ''}
+            else:
+                with open(meta_path, 'r') as f:
+                    self._meta = yaml.load(f)
+            self._meta['order'] = set(self._meta.get('order', -1))
+        return self._meta

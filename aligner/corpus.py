@@ -393,7 +393,7 @@ class Corpus(object):
                         self.sample_rates[get_sample_rate(wav_path)].add(speaker_name)
                         for interval in ti:
                             label = interval.mark.lower().strip()
-                            #label = sanitize(label)
+                            # label = sanitize(label)
                             words = [sanitize(x) for x in label.split()]
                             words = [x for x in words if x not in ['', '-', "'"]]
                             if not words:
@@ -469,8 +469,8 @@ class Corpus(object):
             if count > 1:
                 bad_speakers.append(speaker)
         if bad_speakers:
-            msg = 'The following speakers had multiple speaking rates: {}.  Please make sure that each speaker has a consistent sampling rate.'.format(
-                ', '.join(bad_speakers))
+            msg = 'The following speakers had multiple speaking rates: {}. ' \
+                  'Please make sure that each speaker has a consistent sampling rate.'.format(', '.join(bad_speakers))
             root_logger.error(msg)
             raise (SampleRateError(msg))
 
@@ -478,7 +478,9 @@ class Corpus(object):
             self.num_jobs = len(self.speak_utt_mapping)
         if self.num_jobs < len(self.sample_rates.keys()):
             self.num_jobs = len(self.sample_rates.keys())
-            msg = 'The number of jobs was set to {}, due to the different sample rates in the dataset.  If you would like to use fewer parallel jobs, please resample all wav files to the same sample rate.'.format(
+            msg = 'The number of jobs was set to {}, due to the different sample rates in the dataset. ' \
+                  'If you would like to use fewer parallel jobs, ' \
+                  'please resample all wav files to the same sample rate.'.format(
                 self.num_jobs)
             print(msg)
             root_logger.warning(msg)
@@ -594,6 +596,25 @@ class Corpus(object):
             output.append(output_g)
         return output
 
+    def texts_for_lm(self, dictionary):
+        oov_code = dictionary.oov_int
+        output = []
+        grouped_texts = self.grouped_text(dictionary)
+        for g in grouped_texts:
+            for u, text in g:
+                new_text = []
+                for i in range(len(text)):
+                    t = text[i]
+                    lookup = dictionary.to_int(t)
+                    if lookup is None:
+                        continue
+                    if lookup == oov_code:
+                        new_text.append('<unk>')
+                    else:
+                        new_text.append(t)
+                output.append(' '.join(new_text))
+        return output
+
     def grouped_text(self, dictionary=None):
         output = []
         for g in self.groups:
@@ -601,7 +622,7 @@ class Corpus(object):
             for u in g:
                 if dictionary is None:
                     try:
-                        text = self.text_mapping[u]
+                        new_text = self.text_mapping[u]
                     except KeyError:
                         continue
                 else:

@@ -492,10 +492,12 @@ class Dictionary(object):
                     f.write(' '.join([p, cat]) + '\n')
                     intf.write(' '.join([str(self.phone_mapping[p]), cat]) + '\n')
 
-    def _write_word_file(self):
-        words_path = os.path.join(self.output_directory, 'words.txt')
+    @property
+    def words_file_path(self):
+        return os.path.join(self.output_directory, 'words.txt')
 
-        with open(words_path, 'w', encoding='utf8') as f:
+    def _write_word_file(self):
+        with open(self.words_file_path, 'w', encoding='utf8') as f:
             for w, i in sorted(self.words_mapping.items(), key=lambda x: x[1]):
                 f.write('{} {}\n'.format(w, i))
 

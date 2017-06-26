@@ -87,6 +87,7 @@ def stereo_corpus_dir(corpus_root_dir, wav_dir, textgrid_dir):
     shutil.copyfile(os.path.join(textgrid_dir, name + '.TextGrid'), os.path.join(path, name + '.TextGrid'))
     return path
 
+
 @pytest.fixture(scope='session')
 def shortsegments_corpus_dir(corpus_root_dir, wav_dir, textgrid_dir):
     path = os.path.join(corpus_root_dir, 'short_segments')
@@ -95,6 +96,7 @@ def shortsegments_corpus_dir(corpus_root_dir, wav_dir, textgrid_dir):
     shutil.copyfile(os.path.join(wav_dir, 'dummy.wav'), os.path.join(path, name + '.wav'))
     shutil.copyfile(os.path.join(textgrid_dir, name + '.TextGrid'), os.path.join(path, name + '.TextGrid'))
     return path
+
 
 @pytest.fixture(scope='session')
 def vietnamese_corpus_dir(corpus_root_dir, wav_dir, textgrid_dir):
@@ -314,6 +316,11 @@ def g2p_model_path(generated_dir):
 @pytest.fixture(scope='session')
 def sick_g2p_model_path(generated_dir):
     return os.path.join(generated_dir, 'sick_g2p.zip')
+
+
+@pytest.fixture(scope='session')
+def sick_lm_model_path(generated_dir):
+    return os.path.join(generated_dir, 'sick_lm.zip')
 
 
 @pytest.fixture(scope='session')

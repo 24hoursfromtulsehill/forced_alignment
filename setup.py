@@ -42,6 +42,8 @@ if __name__ == '__main__':
           packages=['aligner',
                     'aligner.aligner',
                     'aligner.g2p',
+                    'aligner.lm',
+                    'aligner.transcriber',
                     'aligner.command_line',
                     'aligner.gui'],
           install_requires=[

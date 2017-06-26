@@ -27,7 +27,7 @@ class PhonetisaurusTrainer(object):
         super(PhonetisaurusTrainer, self).__init__()
         if not temp_directory:
             temp_directory = TEMP_DIR
-        self.temp_directory = os.path.join(temp_directory, 'G2P')
+        temp_directory = os.path.join(temp_directory, 'G2P')
 
         self.name, _ = os.path.splitext(os.path.basename(model_path))
         self.temp_directory = os.path.join(temp_directory, self.name)
